@@ -135,7 +135,8 @@ def generate_polycubes(n, use_cache=False):
         for new_cube in expand_cube(base_cube):
             if not cube_exists_rle(new_cube, polycubes_rle):
                 polycubes.append(new_cube)
-                polycubes_rle.add(rle(new_cube))
+                for cube_rotation in all_rotations(new_cube):
+                    polycubes_rle.add(rle(cube_rotation))
 
         if (idx % 100 == 0):               
             perc = round((idx / len(base_cubes)) * 100,2)
@@ -200,9 +201,8 @@ def cube_exists_rle(polycube, polycubes_rle):
     boolean: True if polycube is already present in the set of all cubes so far.
   
     """
-    for cube_rotation in all_rotations(polycube):
-        if rle(cube_rotation) in polycubes_rle:
-            return True
+    if rle(polycube) in polycubes_rle:
+        return True
 
     return False
 
