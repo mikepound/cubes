@@ -7,7 +7,7 @@ use ndarray::{Array, ArrayBase, Dim, OwnedRepr};
 use crate::cache::{get_cache, save_cache};
 
 type Polycube = ArrayBase<OwnedRepr<u8>, Dim<[usize; 3]>>;
-type Rle = Vec<u8>;
+type Rle = Vec<isize>;
 
 fn all_rotations(polycube: &Polycube) {
     todo!();
@@ -91,12 +91,43 @@ pub fn generate_polycubes(number: u8, use_cache: bool) -> Vec<Polycube> {
 /// 3) Each string of ones of length m is replaced with a single value +m
 ///
 /// Parameters:
-/// polycube (np.array): 3D Numpy byte array where 1 values indicate polycube positions
+/// polycube (Polycube): 3D Numpy byte array where 1 values indicate polycube positions
 ///
 /// Returns:
-/// tuple(int): Run length encoded polycube in the form (X, Y, Z, a, b, c, ...)
+/// Rle: Run length encoded polycube in the form (X, Y, Z, a, b, c, ...)
 fn rle(polycube: &Polycube) -> Rle {
-    todo!();
+    let mut r: Vec<isize> = polycube.shape().iter().map(|n| *n as isize).collect();
+    let mut current = None;
+    let mut val = 0isize;
+    for x in polycube.iter() {
+        match current {
+            None => {
+                current = Some(x);
+                val = 1;
+            }
+            Some(c) if c == x => {
+                val += 1;
+            }
+            Some(c) => {
+                r.push(if c == &1u8 { val } else { -val });
+                current = Some(x);
+                val = 1;
+            }
+        }
+    }
+
+    r.push(match current {
+        Some(current) if current == &1u8 => val,
+        _ => -val,
+    });
+
+    r
+}
+
+#[test]
+fn test_rle() {
+    let ones = Array::<u8, _>::ones((3, 1, 1));
+    assert_eq!(rle(&ones), vec![3, 1, 1, 3]);
 }
 
 /// Determines if a polycube has already been seen.
