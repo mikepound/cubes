@@ -28,5 +28,7 @@ This was just a bit of fun, and as soon as it broadly worked, I stopped! This co
 - Calculating 24 rotations of a cube is slow, the only way to avoid this would be to come up with some rotationally invariant way of comparing cubes. I've not thought of one yet!
 
 ## References
+- [Wikipedia article](https://en.wikipedia.org/wiki/Polycube)
 - [This repository](https://github.com/noelle-crawfish/Enumerating-Polycubes) was a source of inspiration, and a great description of some possible ways to solve this.
 - [There may be better ways](https://www.sciencedirect.com/science/article/pii/S0012365X0900082X) to count these, but I've not explored in much detail.
+- [Kevin Gong's](http://kevingong.com/Polyominoes/Enumeration.html) webpage on enumerating all shapes up to n=16.
