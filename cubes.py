@@ -149,7 +149,7 @@ def generate_polycubes(n, use_cache=False):
 
     return polycubes
 
-def rle(polycube):
+def rle(polycube: np.ndarray):
     """
     Computes a simple hash of a given polycube.
     It does this by converting the polycube into a 1d array and then interpreting those bits as a unsigned integer
@@ -166,10 +166,10 @@ def rle(polycube):
     """
 
     pack_cube = np.packbits(polycube.flatten())
-    out = 0
+    data = 0
     for part in pack_cube:
-        out = out * 256
-        out += int(part)
+        data = (data << 8) + int(part)
+    out = (data * 100000) + (polycube.shape[0] * 1000) + (polycube.shape[1] * 10) + (polycube.shape[2]) # add volume dimensions to lower bits of hash
     return out
 
 
