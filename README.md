@@ -18,6 +18,9 @@ With python installed, you can run the code like this:
 
 Where n is the number of cubes you'd like to calculate. If you specify `--cache` then the program will attempt to load .npy files that hold all the pre-computed cubes for n-1 and then n. If you specify `--no-cache` then everything is calcuated from scratch, and no cache files are stored.
 
+## Pre-computed cache files
+You can download the cache files for n=3 to n=11 from [here](https://drive.google.com/drive/folders/1Ls3gJCrNQ17yg1IhrIav70zLHl858Fl4?usp=drive_link). If you manage to calculate any more sets, please feel free to save them as an npy file and I'll upload them!
+
 ## Improving the code
 This was just a bit of fun, and as soon as it broadly worked, I stopped! This code could be made a lot better, and actually the whole point of the video was to get people thinking and have a mess around yourselves. Some things you might think about:
 - Another language like c or java would be substantially faster
