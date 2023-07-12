@@ -54,12 +54,10 @@ def crop_cube(cube):
   
     """
     for i in range(cube.ndim):
-        cube = np.swapaxes(cube, 0, i)  # send i-th axis to front
-        while np.all( cube[0]==0 ):
-            cube = cube[1:]
-        while np.all( cube[-1]==0 ):
-            cube = cube[:-1]
-        cube = np.swapaxes(cube, 0, i)  # send i-th axis to its original position
+        cube = np.swapaxes(cube, 0, i)
+        nonzero_indices = np.any(cube != 0, axis=tuple(range(1, cube.ndim)))
+        cube = cube[nonzero_indices]
+        cube = np.swapaxes(cube, 0, i)
     return cube
 
 def expand_cube(cube):
