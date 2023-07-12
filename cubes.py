@@ -169,7 +169,7 @@ def rle(polycube):
     data = 0
     for part in pack_cube:
         data = (data << 8) + int(part)
-    out = (data * 100000) + (polycube.shape[0] * 1000) + (polycube.shape[1] * 10) + (polycube.shape[2]) # add volume dimensions to lower bits of hash
+    out = (data * 100000000) + (polycube.shape[0] * 100000) + (polycube.shape[1] * 100) + (polycube.shape[2]) # add volume dimensions to lower bits of hash
     return out
 
 
