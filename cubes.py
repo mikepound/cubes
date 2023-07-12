@@ -133,7 +133,8 @@ def generate_polycubes(n, use_cache=False):
         for new_cube in expand_cube(base_cube):
             if not cube_exists_rle(new_cube, polycubes_rle):
                 polycubes.append(new_cube)
-                polycubes_rle.add(rle(new_cube))
+                for cube_rotation in all_rotations(new_cube):
+                    polycubes_rle.add(rle(cube_rotation))
 
         if (idx % 100 == 0):               
             perc = round((idx / len(base_cubes)) * 100,2)
@@ -149,40 +150,25 @@ def generate_polycubes(n, use_cache=False):
 
 def rle(polycube):
     """
-    Computes a simple run-length encoding of a given polycube. This function allows cubes to be more quickly compared via hashing.
+    Computes a simple hash of a given polycube.
+    It does this by converting the polycube into a 1d array and then interpreting those bits as a unsigned integer
+    This function allows cubes to be more quickly compared via hashing.
   
-    Converts a {0,1} nd array into a tuple that encodes the same shape. The array is first flattened, and then the following algorithm is applied:
-
-    1) The first three values in tuple contain the x,y,z dimension sizes of the array
-    2) Each string of zeros of length n is replaced with a single value -n
-    3) Each string of ones of length m is replaced with a single value +m
+    Converts a {0,1} nd array into a single unique large integer
   
     Parameters:
     polycube (np.array): 3D Numpy byte array where 1 values indicate polycube positions
   
     Returns:
-    tuple(int): Run length encoded polycube in the form (X, Y, Z, a, b, c, ...)
-
+    int: a unique integer hash
     """
-    r = []
-    r.extend(polycube.shape)
-    current = None
-    val = 0
-    for x in polycube.flat:
-        if current is None:
-            current = x
-            val = 1
-            pass
-        elif current == x:
-            val += 1
-        elif current != x:
-            r.append(val if current == 1 else -val)
-            current = x
-            val = 1
 
-    r.append(val if current == 1 else -val)
-
-    return tuple(r)
+    pack_cube = np.packbits(polycube.flatten())
+    data = 0
+    for part in pack_cube:
+        data = (data << 8) + int(part)
+    out = (data * 100000000) + (polycube.shape[0] * 100000) + (polycube.shape[1] * 100) + (polycube.shape[2]) # add volume dimensions to lower bits of hash
+    return out
 
 def cube_exists_rle(polycube, polycubes_rle):
     """
@@ -198,11 +184,7 @@ def cube_exists_rle(polycube, polycubes_rle):
     boolean: True if polycube is already present in the set of all cubes so far.
   
     """
-    for cube_rotation in all_rotations(polycube):
-        if rle(cube_rotation) in polycubes_rle:
-            return True
-
-    return False
+    return rle(polycube) in polycubes_rle
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
