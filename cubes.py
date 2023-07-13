@@ -10,7 +10,7 @@ def all_rotations(polycube):
     Calculates all rotations of a polycube.
   
     Adapted from https://stackoverflow.com/questions/33190042/how-to-calculate-all-24-rotations-of-3d-array.
-    This function computes all 24 rotations around each of the axis x,y,z. It uses numpy operations to do this, to avoid unecessary copies.
+    This function computes all 24 rotations around each of the axis x,y,z. It uses numpy operations to do this, to avoid unnecessary copies.
     The function returns a generator, to avoid computing all rotations if they are not needed.
   
     Parameters:
